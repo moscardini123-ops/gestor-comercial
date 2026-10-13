@@ -28,6 +28,7 @@ model Cliente {
   cep          String?
   cidade       String?
   uf           String?
+  papel        String   @default("cliente") // cliente | fornecedor | transportador | outro
 
   pedidos      Pedido[]
   ordens       OrdemServico[]
@@ -57,6 +58,10 @@ model Pedido {
   vendedor         String?
   obs              String?
   obsInterna       String?
+  pesoBruto        Float    @default(0)
+  pesoLiquido      Float    @default(0)
+  termoId          Int?
+  termo            TermoGarantia? @relation(fields: [termoId], references: [id])
   itens            PedidoItem[]
   notaId           Int?
   criadoEm         DateTime @default(now())
@@ -92,6 +97,13 @@ model OrdemServico {
   valorPecas      Float    @default(0)
   valorTotal      Float    @default(0)
   obs             String?
+  tipo            String   @default("reparo") // reparo | upgrade
+  serialNovo      String?
+  usadoRecebido   String?
+  avaliacaoUsado  Float    @default(0)
+  valorNovo       Float    @default(0)
+  termoId         Int?
+  termo           TermoGarantia? @relation(fields: [termoId], references: [id])
   itens           OrdemServicoItem[]
   criadoEm        DateTime @default(now())
 }
@@ -160,4 +172,65 @@ model HistoricoSituacao {
   criadoEm   DateTime @default(now())
 
   @@index([entidade, entidadeId])
+}
+
+model TermoGarantia {
+  id       Int      @id @default(autoincrement())
+  nome     String
+  conteudo String
+  criadoEm DateTime @default(now())
+
+  pedidos  Pedido[]
+  ordens   OrdemServico[]
+}
+
+model Empresa {
+  id       Int     @id @default(autoincrement())
+  nome     String
+  cnpj     String?
+  ie       String?
+  endereco String?
+  cidade   String?
+  uf       String?
+  cep      String?
+  telefone String?
+  site     String?
+}
+
+model Produto {
+  id            Int     @id @default(autoincrement())
+  descricao     String
+  sku           String?
+  gtin          String?
+  ncm           String?
+  tipo          String  @default("simples") // simples | kit | variacao | fabricado | materia-prima
+  categoria     String?
+  preco         Float   @default(0)
+  custo         Float   @default(0)
+  estoque       Float   @default(0)
+  situacao      String  @default("ativo") // ativo | inativo
+  criadoEm      DateTime @default(now())
+}
+
+model Vendedor {
+  id          Int     @id @default(autoincrement())
+  nome        String
+  email       String?
+  comissaoPct Float   @default(0)
+  situacao    String  @default("ativo")
+  criadoEm    DateTime @default(now())
+}
+
+model Garantia {
+  id           Int      @id @default(autoincrement())
+  protocolo    String   @unique
+  serial       String?
+  modelo       String?
+  clienteNome  String
+  cpf          String?
+  problema     String?
+  status       String   @default("Aberta") // Aberta | Em analise | Aguardando peca | Resolvida | Negada
+  dataAbertura DateTime @default(now())
+  obs          String?
+  criadoEm     DateTime @default(now())
 }

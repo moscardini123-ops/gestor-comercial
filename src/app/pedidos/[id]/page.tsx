@@ -23,9 +23,10 @@ export default async function PedidoDetalhe({ params }: { params: Promise<{ id: 
       <PageHeader title={`Pedido #${p.numero}`} subtitle={`Aberto em ${dataBR(p.dataPedido)}`}
         action={<div className="flex items-center gap-3">
           <StatusPill label={p.situacao} tone={tonePedido(p.situacao)} />
+          <Link href={`/pedidos/${p.id}/imprimir`} className="rounded-lg border px-4 py-2 text-sm font-medium" style={{ borderColor: "var(--border)" }}>Imprimir</Link>
           <Link href={`/pedidos/${p.id}/editar`} className="rounded-lg border px-4 py-2 text-sm font-medium" style={{ borderColor: "var(--border)" }}>Editar</Link>
         </div>} />
-      <Link href="/pedidos" className="mb-4 inline-block text-sm text-indigo-600 dark:text-indigo-300">&larr; Voltar aos pedidos</Link>
+      <Link href="/pedidos" className="mb-4 inline-block text-sm text-indigo-300">&larr; Voltar aos pedidos</Link>
 
       <div className="grid gap-4 md:grid-cols-3">
         <Card className="md:col-span-1">

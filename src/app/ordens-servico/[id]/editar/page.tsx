@@ -9,14 +9,17 @@ export const dynamic = "force-dynamic";
 
 export default async function EditarOrdem({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const ordem = await prisma.ordemServico.findUnique({ where: { id: Number(id) }, include: { cliente: true, itens: true } });
+  const [ordem, termos] = await Promise.all([
+    prisma.ordemServico.findUnique({ where: { id: Number(id) }, include: { cliente: true, itens: true } }),
+    prisma.termoGarantia.findMany({ orderBy: { nome: "asc" }, select: { id: true, nome: true } }),
+  ]);
   if (!ordem) notFound();
   const action = atualizarOrdem.bind(null, ordem.id);
   return (
     <>
       <PageHeader title={`Editar ordem #${ordem.numero}`} subtitle="Altere os dados, servicos e pecas." />
-      <Link href={`/ordens-servico/${ordem.id}`} className="mb-4 inline-block text-sm text-indigo-600 dark:text-indigo-300">&larr; Voltar a ordem</Link>
-      <OrdemForm action={action} inicial={ordem} rotuloBotao="Salvar alteracoes" travarSituacao />
+      <Link href={`/ordens-servico/${ordem.id}`} className="mb-4 inline-block text-sm text-indigo-300">&larr; Voltar a ordem</Link>
+      <OrdemForm action={action} inicial={ordem} rotuloBotao="Salvar alteracoes" travarSituacao termos={termos} />
     </>
   );
 }

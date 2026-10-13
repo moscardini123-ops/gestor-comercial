@@ -15,7 +15,7 @@ export default async function EditarNota({ params }: { params: Promise<{ id: str
   return (
     <>
       <PageHeader title={`Editar nota #${nota.numero}`} subtitle="Altere os dados fiscais e os itens." />
-      <Link href={`/notas-fiscais/${nota.id}`} className="mb-4 inline-block text-sm text-indigo-600 dark:text-indigo-300">&larr; Voltar a nota</Link>
+      <Link href={`/notas-fiscais/${nota.id}`} className="mb-4 inline-block text-sm text-indigo-300">&larr; Voltar a nota</Link>
       <NotaForm action={action} inicial={nota} rotuloBotao="Salvar alteracoes" travarSituacao />
     </>
   );

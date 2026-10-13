@@ -39,8 +39,8 @@ export default async function NotasPage({ searchParams }: { searchParams: Promis
       ) : (
         <DataTable head={<><Th>Numero</Th><Th>Serie</Th><Th>Cliente</Th><Th>Emissao</Th><Th>Situacao</Th><Th right>Valor</Th></>}>
           {notas.map((n) => (
-            <tr key={n.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50">
-              <Td><Link href={`/notas-fiscais/${n.id}`} className="font-semibold text-indigo-600 dark:text-indigo-300">#{n.numero}</Link></Td>
+            <tr key={n.id} className="lin">
+              <Td><Link href={`/notas-fiscais/${n.id}`} className="font-semibold text-indigo-300">#{n.numero}</Link></Td>
               <Td>{n.serie}</Td>
               <Td>{n.cliente.nome}</Td>
               <Td>{dataBR(n.dataEmissao)}</Td>

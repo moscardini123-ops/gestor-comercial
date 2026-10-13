@@ -7,7 +7,7 @@ export default function NovaNota() {
   return (
     <>
       <PageHeader title="Nova nota fiscal" subtitle="Dados fiscais, destinatario e itens." />
-      <Link href="/notas-fiscais" className="mb-4 inline-block text-sm text-indigo-600 dark:text-indigo-300">&larr; Voltar as notas</Link>
+      <Link href="/notas-fiscais" className="mb-4 inline-block text-sm text-indigo-300">&larr; Voltar as notas</Link>
       <NotaForm action={criarNota} />
     </>
   );

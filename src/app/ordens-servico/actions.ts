@@ -10,17 +10,28 @@ function dadosDoForm(formData: FormData) {
   const valorServicos = linhas.filter((l) => l.tipo !== "peca").reduce((s, l) => s + (l.quantidade ?? 0) * (l.valorUnitario ?? 0), 0);
   const valorPecas = linhas.filter((l) => l.tipo === "peca").reduce((s, l) => s + (l.quantidade ?? 0) * (l.valorUnitario ?? 0), 0);
   const dataPrevista = String(formData.get("dataPrevista") ?? "");
+  const tipo = String(formData.get("tipo") ?? "reparo");
+  const valorNovo = Number(formData.get("valorNovo") ?? 0) || 0;
+  const termoRaw = formData.get("termoId");
+  const termoId = termoRaw && String(termoRaw) ? Number(termoRaw) || null : null;
+  const valorTotal = tipo === "upgrade" ? valorNovo + valorServicos + valorPecas : valorServicos + valorPecas;
   return {
     base: {
+      tipo,
+      termoId,
       equipamento: String(formData.get("equipamento") ?? "") || null,
       numeroSerie: String(formData.get("numeroSerie") ?? "") || null,
+      serialNovo: String(formData.get("serialNovo") ?? "") || null,
+      usadoRecebido: String(formData.get("usadoRecebido") ?? "") || null,
+      avaliacaoUsado: Number(formData.get("avaliacaoUsado") ?? 0) || 0,
+      valorNovo,
       defeitoRelatado: String(formData.get("defeitoRelatado") ?? "") || null,
       diagnostico: String(formData.get("diagnostico") ?? "") || null,
       solucao: String(formData.get("solucao") ?? "") || null,
       tecnico: String(formData.get("tecnico") ?? "") || null,
       obs: String(formData.get("obs") ?? "") || null,
       dataPrevista: dataPrevista ? new Date(dataPrevista) : null,
-      valorServicos, valorPecas, valorTotal: valorServicos + valorPecas,
+      valorServicos, valorPecas, valorTotal,
     },
     itensCreate: linhas.map((l) => ({
       tipo: l.tipo === "peca" ? "peca" : "servico", descricao: String(l.descricao),

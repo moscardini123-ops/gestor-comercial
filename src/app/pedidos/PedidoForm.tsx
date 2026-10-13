@@ -17,16 +17,18 @@ type PedidoInit = {
   valorFrete?: number;
   valorDesconto?: number;
   obs?: string | null;
+  termoId?: number | null;
   itens?: { descricao: string; unidade: string; quantidade: number; valorUnitario: number }[];
 };
 
 export function PedidoForm({
-  action, inicial, rotuloBotao = "Salvar pedido", travarSituacao = false,
+  action, inicial, rotuloBotao = "Salvar pedido", travarSituacao = false, termos = [],
 }: {
   action: (formData: FormData) => void | Promise<void>;
   inicial?: PedidoInit;
   rotuloBotao?: string;
   travarSituacao?: boolean;
+  termos?: { id: number; nome: string }[];
 }) {
   const linhas: Linha[] | undefined = inicial?.itens?.map((i) => ({ descricao: i.descricao, unidade: i.unidade, quantidade: i.quantidade, valorUnitario: i.valorUnitario }));
   return (
@@ -50,6 +52,12 @@ export function PedidoForm({
           </Field>
           <Field label="Forma de envio"><input name="formaEnvio" defaultValue={inicial?.formaEnvio ?? ""} className={inputClass} style={inputStyle} placeholder="Exemplo: Correios PAC" /></Field>
           <Field label="Codigo de rastreio" hint="A transportadora e deduzida do codigo"><input name="codigoRastreamento" defaultValue={inicial?.codigoRastreamento ?? ""} className={inputClass} style={inputStyle} placeholder="Exemplo: AA123456789BR" /></Field>
+          <Field label="Termo de garantia" hint="Opcional; sai no documento impresso">
+            <select name="termoId" defaultValue={inicial?.termoId ?? ""} className={inputClass} style={inputStyle}>
+              <option value="">Nenhum</option>
+              {termos.map((t) => <option key={t.id} value={t.id}>{t.nome}</option>)}
+            </select>
+          </Field>
         </div>
       </Card>
 

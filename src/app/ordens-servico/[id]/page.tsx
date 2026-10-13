@@ -23,9 +23,10 @@ export default async function OrdemDetalhe({ params }: { params: Promise<{ id: s
       <PageHeader title={`Ordem de servico #${o.numero}`} subtitle={`Aberta em ${dataBR(o.dataAbertura)}`}
         action={<div className="flex items-center gap-3">
           <StatusPill label={o.situacao} tone={toneOS(o.situacao)} />
+          <Link href={`/ordens-servico/${o.id}/imprimir`} className="rounded-lg border px-4 py-2 text-sm font-medium" style={{ borderColor: "var(--border)" }}>Imprimir</Link>
           <Link href={`/ordens-servico/${o.id}/editar`} className="rounded-lg border px-4 py-2 text-sm font-medium" style={{ borderColor: "var(--border)" }}>Editar</Link>
         </div>} />
-      <Link href="/ordens-servico" className="mb-4 inline-block text-sm text-indigo-600 dark:text-indigo-300">&larr; Voltar as ordens</Link>
+      <Link href="/ordens-servico" className="mb-4 inline-block text-sm text-indigo-300">&larr; Voltar as ordens</Link>
 
       <div className="grid gap-4 md:grid-cols-3">
         <Card>

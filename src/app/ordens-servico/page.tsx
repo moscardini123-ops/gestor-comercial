@@ -39,8 +39,8 @@ export default async function OrdensPage({ searchParams }: { searchParams: Promi
       ) : (
         <DataTable head={<><Th>Numero</Th><Th>Cliente</Th><Th>Equipamento</Th><Th>Abertura</Th><Th>Situacao</Th><Th right>Total</Th></>}>
           {ordens.map((o) => (
-            <tr key={o.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50">
-              <Td><Link href={`/ordens-servico/${o.id}`} className="font-semibold text-indigo-600 dark:text-indigo-300">#{o.numero}</Link></Td>
+            <tr key={o.id} className="lin">
+              <Td><Link href={`/ordens-servico/${o.id}`} className="font-semibold text-indigo-300">#{o.numero}</Link></Td>
               <Td>{o.cliente.nome}</Td>
               <Td>{o.equipamento || "—"}</Td>
               <Td>{dataBR(o.dataAbertura)}</Td>

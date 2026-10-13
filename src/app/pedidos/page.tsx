@@ -40,8 +40,8 @@ export default async function PedidosPage({ searchParams }: { searchParams: Prom
       ) : (
         <DataTable head={<><Th>Numero</Th><Th>Cliente</Th><Th>Data</Th><Th>Situacao</Th><Th right>Itens</Th><Th right>Total</Th></>}>
           {pedidos.map((p) => (
-            <tr key={p.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50">
-              <Td><Link href={`/pedidos/${p.id}`} className="font-semibold text-indigo-600 dark:text-indigo-300">#{p.numero}</Link></Td>
+            <tr key={p.id} className="lin">
+              <Td><Link href={`/pedidos/${p.id}`} className="font-semibold text-indigo-300">#{p.numero}</Link></Td>
               <Td>{p.cliente.nome}</Td>
               <Td>{dataBR(p.dataPedido)}</Td>
               <Td><StatusPill label={p.situacao} tone={tonePedido(p.situacao)} /></Td>

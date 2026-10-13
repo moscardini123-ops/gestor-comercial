@@ -11,9 +11,12 @@ function dadosDoForm(formData: FormData) {
   const valorFrete = Number(formData.get("valorFrete") ?? 0) || 0;
   const valorDesconto = Number(formData.get("valorDesconto") ?? 0) || 0;
   const dataPrevista = String(formData.get("dataPrevista") ?? "");
+  const termoRaw = formData.get("termoId");
+  const termoId = termoRaw && String(termoRaw) ? Number(termoRaw) || null : null;
   return {
     linhas, totalProdutos, valorFrete, valorDesconto,
     base: {
+      termoId,
       condicaoPagamento: String(formData.get("condicaoPagamento") ?? "") || null,
       fretePorConta: String(formData.get("fretePorConta") ?? "R"),
       formaEnvio: String(formData.get("formaEnvio") ?? "") || null,

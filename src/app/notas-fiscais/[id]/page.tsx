@@ -25,7 +25,7 @@ export default async function NotaDetalhe({ params }: { params: Promise<{ id: st
           <StatusPill label={n.descricaoSituacao} tone={toneNF(n.situacao)} />
           <Link href={`/notas-fiscais/${n.id}/editar`} className="rounded-lg border px-4 py-2 text-sm font-medium" style={{ borderColor: "var(--border)" }}>Editar</Link>
         </div>} />
-      <Link href="/notas-fiscais" className="mb-4 inline-block text-sm text-indigo-600 dark:text-indigo-300">&larr; Voltar as notas</Link>
+      <Link href="/notas-fiscais" className="mb-4 inline-block text-sm text-indigo-300">&larr; Voltar as notas</Link>
 
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
