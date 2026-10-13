@@ -36,6 +36,8 @@ O cliente reconhece ter recebido as instruções de cuidado da fabricante (www.g
 A responsabilidade limita-se ao reparo ou substituição do produto, conforme o item 1. A empresa não responde por danos indiretos, lucros cessantes ou perda de dados. Os direitos desta garantia são limitados ao comprador inicial; este termo é intransferível.`;
 
 async function main() {
+  const jaTem = await prisma.empresa.findFirst();
+  if (jaTem) { console.log("Seed: dados ja existem, pulando."); return; }
   await prisma.pedidoItem.deleteMany();
   await prisma.ordemServicoItem.deleteMany();
   await prisma.notaFiscalItem.deleteMany();

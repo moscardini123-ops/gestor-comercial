@@ -11,7 +11,8 @@
     "typecheck": "tsc --noEmit",
     "db:push": "prisma db push",
     "db:seed": "tsx prisma/seed.ts",
-    "setup": "prisma generate && prisma db push && npm run db:seed"
+    "setup": "prisma generate && prisma db push && npm run db:seed",
+    "vercel-build": "DBM=\"${DATABASE_URL_UNPOOLED:-${POSTGRES_URL_NON_POOLING:-$DATABASE_URL}}\"; prisma generate && DATABASE_URL=\"$DBM\" prisma db push --skip-generate --accept-data-loss && DATABASE_URL=\"$DBM\" tsx prisma/seed.ts && next build"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
