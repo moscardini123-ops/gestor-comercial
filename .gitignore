@@ -1,0 +1,8 @@
+node_modules/
+.next/
+out/
+*.db
+*.db-journal
+prisma/dev.db*
+.env
+next-env.d.ts

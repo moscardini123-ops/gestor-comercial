@@ -1,0 +1,150 @@
+// Gestor Comercial — mini ERP (projeto proprio).
+// Campos de Pedido e Nota Fiscal seguem os nomes da API publica v2 do Tiny/Olist
+// (documentacao publica). Ordem de Servico e modelo proprio, no padrao de ERPs de
+// assistencia, pois a API publica nao expoe esse recurso.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Cliente {
+  id           Int      @id @default(autoincrement())
+  nome         String
+  nomeFantasia String?
+  tipoPessoa   String   @default("F") // F | J | E
+  cpfCnpj      String?
+  ie           String?
+  email        String?
+  fone         String?
+  endereco     String?
+  numero       String?
+  complemento  String?
+  bairro       String?
+  cep          String?
+  cidade       String?
+  uf           String?
+
+  pedidos      Pedido[]
+  ordens       OrdemServico[]
+  notas        NotaFiscal[]
+  criadoEm     DateTime @default(now())
+}
+
+model Pedido {
+  id               Int      @id @default(autoincrement())
+  numero           Int      @unique
+  numeroEcommerce  String?
+  dataPedido       DateTime @default(now())
+  dataPrevista     DateTime?
+  situacao         String   @default("Em aberto")
+  clienteId        Int
+  cliente          Cliente  @relation(fields: [clienteId], references: [id])
+  valorFrete       Float    @default(0)
+  valorDesconto    Float    @default(0)
+  outrasDespesas   Float    @default(0)
+  totalProdutos    Float    @default(0)
+  totalPedido      Float    @default(0)
+  condicaoPagamento String?
+  formaFrete       String?
+  fretePorConta    String   @default("R") // R D T 3 4 S
+  formaEnvio       String?
+  codigoRastreamento String?
+  vendedor         String?
+  obs              String?
+  obsInterna       String?
+  itens            PedidoItem[]
+  notaId           Int?
+  criadoEm         DateTime @default(now())
+}
+
+model PedidoItem {
+  id            Int     @id @default(autoincrement())
+  pedidoId      Int
+  pedido        Pedido  @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
+  codigo        String?
+  descricao     String
+  unidade       String  @default("UN")
+  quantidade    Float   @default(1)
+  valorUnitario Float   @default(0)
+}
+
+model OrdemServico {
+  id              Int      @id @default(autoincrement())
+  numero          Int      @unique
+  dataAbertura    DateTime @default(now())
+  dataPrevista    DateTime?
+  dataConclusao   DateTime?
+  situacao        String   @default("Aberta")
+  clienteId       Int
+  cliente         Cliente  @relation(fields: [clienteId], references: [id])
+  equipamento     String?
+  numeroSerie     String?
+  defeitoRelatado String?
+  diagnostico     String?
+  solucao         String?
+  tecnico         String?
+  valorServicos   Float    @default(0)
+  valorPecas      Float    @default(0)
+  valorTotal      Float    @default(0)
+  obs             String?
+  itens           OrdemServicoItem[]
+  criadoEm        DateTime @default(now())
+}
+
+model OrdemServicoItem {
+  id            Int          @id @default(autoincrement())
+  ordemId       Int
+  ordem         OrdemServico @relation(fields: [ordemId], references: [id], onDelete: Cascade)
+  tipo          String       @default("servico") // servico | peca
+  descricao     String
+  quantidade    Float        @default(1)
+  valorUnitario Float        @default(0)
+}
+
+model NotaFiscal {
+  id               Int      @id @default(autoincrement())
+  tipoNota         String   @default("S") // E | S
+  naturezaOperacao String?
+  serie            Int      @default(1)
+  numero           Int      @unique
+  dataEmissao      DateTime @default(now())
+  dataSaida        DateTime?
+  clienteId        Int
+  cliente          Cliente  @relation(fields: [clienteId], references: [id])
+  valorProdutos    Float    @default(0)
+  valorServicos    Float    @default(0)
+  valorFrete       Float    @default(0)
+  valorIcms        Float    @default(0)
+  valorDesconto    Float    @default(0)
+  valorNota        Float    @default(0)
+  fretePorConta    String   @default("R")
+  pesoBruto        Float    @default(0)
+  pesoLiquido      Float    @default(0)
+  situacao         Int      @default(1) // 1 Pendente ...
+  descricaoSituacao String  @default("Pendente")
+  chaveAcesso      String?
+  idVenda          Int?
+  vendedor         String?
+  obs              String?
+  itens            NotaFiscalItem[]
+  criadoEm         DateTime @default(now())
+}
+
+model NotaFiscalItem {
+  id            Int        @id @default(autoincrement())
+  notaId        Int
+  nota          NotaFiscal @relation(fields: [notaId], references: [id], onDelete: Cascade)
+  codigo        String?
+  descricao     String
+  unidade       String     @default("UN")
+  ncm           String?
+  cfop          String?
+  quantidade    Float      @default(1)
+  valorUnitario Float      @default(0)
+  valorTotal    Float      @default(0)
+}

@@ -1,0 +1,36 @@
+{
+  "name": "gestor-comercial",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Mini ERP de pedidos de venda, ordens de serviço e notas fiscais. Projeto proprio, inspirado em ERPs do mercado.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "prisma generate && next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "db:push": "prisma db push",
+    "db:seed": "tsx prisma/seed.ts",
+    "setup": "prisma generate && prisma db push && npm run db:seed"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "6.1.0",
+    "eslint-config-next": "^15.5.27",
+    "next": "^15.5.27",
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "22.10.5",
+    "@types/react": "19.0.2",
+    "@types/react-dom": "19.0.2",
+    "prisma": "6.1.0",
+    "tailwindcss": "^4.3.3",
+    "tsx": "4.19.2",
+    "typescript": "5.7.2"
+  }
+}
