@@ -4,20 +4,18 @@ import { brl } from "@/lib/format";
 
 export type Linha = { descricao: string; unidade: string; quantidade: number; valorUnitario: number; tipo?: string };
 
-export function ItensEditor({ name, comTipo = false }: { name: string; comTipo?: boolean }) {
-  const [linhas, setLinhas] = useState<Linha[]>([
-    { descricao: "", unidade: "UN", quantidade: 1, valorUnitario: 0, ...(comTipo ? { tipo: "servico" } : {}) },
-  ]);
+function linhaVazia(comTipo: boolean): Linha {
+  return { descricao: "", unidade: "UN", quantidade: 1, valorUnitario: 0, ...(comTipo ? { tipo: "servico" } : {}) };
+}
+
+export function ItensEditor({ name, comTipo = false, initial }: { name: string; comTipo?: boolean; initial?: Linha[] }) {
+  const [linhas, setLinhas] = useState<Linha[]>(initial && initial.length > 0 ? initial : [linhaVazia(comTipo)]);
 
   function set(i: number, patch: Partial<Linha>) {
     setLinhas((prev) => prev.map((l, idx) => (idx === i ? { ...l, ...patch } : l)));
   }
-  function add() {
-    setLinhas((prev) => [...prev, { descricao: "", unidade: "UN", quantidade: 1, valorUnitario: 0, ...(comTipo ? { tipo: "servico" } : {}) }]);
-  }
-  function remove(i: number) {
-    setLinhas((prev) => (prev.length === 1 ? prev : prev.filter((_, idx) => idx !== i)));
-  }
+  function add() { setLinhas((prev) => [...prev, linhaVazia(comTipo)]); }
+  function remove(i: number) { setLinhas((prev) => (prev.length === 1 ? prev : prev.filter((_, idx) => idx !== i))); }
 
   const total = linhas.reduce((s, l) => s + (l.quantidade || 0) * (l.valorUnitario || 0), 0);
   const inp = "rounded-lg border px-2 py-1.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500";

@@ -4,7 +4,11 @@ import { prisma } from "@/lib/db";
 import { brl, dataBR } from "@/lib/format";
 import { PageHeader, Card, DataTable, Th, Td } from "@/components/ui";
 import { StatusPill } from "@/components/StatusPill";
-import { toneOS } from "@/lib/domain";
+import { TrocarSituacao } from "@/components/TrocarSituacao";
+import { Historico } from "@/components/Historico";
+import { toneOS, SITUACOES_OS } from "@/lib/domain";
+import { listarHistorico } from "@/lib/historico";
+import { trocarSituacaoOrdem } from "../actions";
 
 export const dynamic = "force-dynamic";
 
@@ -12,11 +16,15 @@ export default async function OrdemDetalhe({ params }: { params: Promise<{ id: s
   const { id } = await params;
   const o = await prisma.ordemServico.findUnique({ where: { id: Number(id) }, include: { cliente: true, itens: true } });
   if (!o) notFound();
+  const historico = await listarHistorico("ordem", o.id);
 
   return (
     <>
       <PageHeader title={`Ordem de servico #${o.numero}`} subtitle={`Aberta em ${dataBR(o.dataAbertura)}`}
-        action={<StatusPill label={o.situacao} tone={toneOS(o.situacao)} />} />
+        action={<div className="flex items-center gap-3">
+          <StatusPill label={o.situacao} tone={toneOS(o.situacao)} />
+          <Link href={`/ordens-servico/${o.id}/editar`} className="rounded-lg border px-4 py-2 text-sm font-medium" style={{ borderColor: "var(--border)" }}>Editar</Link>
+        </div>} />
       <Link href="/ordens-servico" className="mb-4 inline-block text-sm text-indigo-600 dark:text-indigo-300">&larr; Voltar as ordens</Link>
 
       <div className="grid gap-4 md:grid-cols-3">
@@ -62,6 +70,17 @@ export default async function OrdemDetalhe({ params }: { params: Promise<{ id: s
         </Card>
       </div>
       {o.obs && <p className="mt-4 text-sm" style={{ color: "var(--muted)" }}><strong>Obs.:</strong> {o.obs}</p>}
+
+      <div className="mt-8 grid gap-4 md:grid-cols-2">
+        <Card>
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide" style={{ color: "var(--muted)" }}>Trocar situacao</h2>
+          <TrocarSituacao action={trocarSituacaoOrdem} id={o.id} atual={o.situacao} opcoes={SITUACOES_OS.map((s) => ({ valor: s.nome, nome: s.nome }))} />
+        </Card>
+        <Card>
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide" style={{ color: "var(--muted)" }}>Historico de situacao</h2>
+          <Historico linhas={historico} />
+        </Card>
+      </div>
     </>
   );
 }

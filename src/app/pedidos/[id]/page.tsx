@@ -4,7 +4,11 @@ import { prisma } from "@/lib/db";
 import { brl, dataBR } from "@/lib/format";
 import { PageHeader, Card, DataTable, Th, Td } from "@/components/ui";
 import { StatusPill } from "@/components/StatusPill";
-import { tonePedido, FRETE_POR_CONTA } from "@/lib/domain";
+import { TrocarSituacao } from "@/components/TrocarSituacao";
+import { Historico } from "@/components/Historico";
+import { tonePedido, FRETE_POR_CONTA, SITUACOES_PEDIDO } from "@/lib/domain";
+import { listarHistorico } from "@/lib/historico";
+import { trocarSituacaoPedido } from "../actions";
 
 export const dynamic = "force-dynamic";
 
@@ -12,11 +16,15 @@ export default async function PedidoDetalhe({ params }: { params: Promise<{ id: 
   const { id } = await params;
   const p = await prisma.pedido.findUnique({ where: { id: Number(id) }, include: { cliente: true, itens: true } });
   if (!p) notFound();
+  const historico = await listarHistorico("pedido", p.id);
 
   return (
     <>
       <PageHeader title={`Pedido #${p.numero}`} subtitle={`Aberto em ${dataBR(p.dataPedido)}`}
-        action={<StatusPill label={p.situacao} tone={tonePedido(p.situacao)} />} />
+        action={<div className="flex items-center gap-3">
+          <StatusPill label={p.situacao} tone={tonePedido(p.situacao)} />
+          <Link href={`/pedidos/${p.id}/editar`} className="rounded-lg border px-4 py-2 text-sm font-medium" style={{ borderColor: "var(--border)" }}>Editar</Link>
+        </div>} />
       <Link href="/pedidos" className="mb-4 inline-block text-sm text-indigo-600 dark:text-indigo-300">&larr; Voltar aos pedidos</Link>
 
       <div className="grid gap-4 md:grid-cols-3">
@@ -60,6 +68,18 @@ export default async function PedidoDetalhe({ params }: { params: Promise<{ id: 
         </Card>
       </div>
       {p.obs && <p className="mt-4 text-sm" style={{ color: "var(--muted)" }}><strong>Obs.:</strong> {p.obs}</p>}
+
+      <div className="mt-8 grid gap-4 md:grid-cols-2">
+        <Card>
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide" style={{ color: "var(--muted)" }}>Trocar situacao</h2>
+          <TrocarSituacao action={trocarSituacaoPedido} id={p.id} atual={p.situacao}
+            opcoes={SITUACOES_PEDIDO.map((s) => ({ valor: s.nome, nome: s.nome }))} />
+        </Card>
+        <Card>
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide" style={{ color: "var(--muted)" }}>Historico de situacao</h2>
+          <Historico linhas={historico} />
+        </Card>
+      </div>
     </>
   );
 }

@@ -148,3 +148,16 @@ model NotaFiscalItem {
   valorUnitario Float      @default(0)
   valorTotal    Float      @default(0)
 }
+
+model HistoricoSituacao {
+  id         Int      @id @default(autoincrement())
+  entidade   String   // "pedido" | "ordem" | "nota"
+  entidadeId Int
+  de         String?
+  para       String
+  observacao String?
+  autor      String?
+  criadoEm   DateTime @default(now())
+
+  @@index([entidade, entidadeId])
+}

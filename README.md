@@ -58,8 +58,20 @@ src/lib/domain.ts           situacoes, cores e tabelas (frete por conta)
 src/components/             UI (nav, tabela, campos, editor de itens)
 ```
 
-## Escopo deste primeiro incremento
+## Funcionalidades
 
-Cada modulo tem **lista com filtro**, **detalhe** e **cadastro** (com itens). Ainda nao
-inclui: edicao/exclusao, autenticacao, emissao fiscal real (integracao SEFAZ), relatorios
-e integracoes de e-commerce. Sao os proximos passos naturais.
+Cada modulo (pedidos, ordens de servico, notas fiscais) tem:
+
+- **Lista** com busca e filtro por situacao.
+- **Detalhe** com todos os campos, itens e totais.
+- **Cadastro** e **edicao** de registros, com editor de itens.
+- **Troca de situacao com historico**: um painel no detalhe registra cada
+  mudanca de situacao (de -> para), com observacao e data, numa linha do tempo.
+  O historico fica na tabela `HistoricoSituacao` (campos `entidade`/`entidadeId`).
+  Na edicao, a situacao fica travada: a mudanca passa sempre pelo painel, para
+  manter o historico consistente.
+
+## Escopo (proximos passos)
+
+Ainda nao inclui: exclusao de registros, autenticacao, emissao fiscal real
+(integracao SEFAZ), relatorios e integracoes de e-commerce.
